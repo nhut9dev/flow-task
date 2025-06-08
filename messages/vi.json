@@ -1,0 +1,16 @@
+{
+  "AppLayout": {
+    "home": "Trang chủ"
+  },
+  "LocaleSwitcher": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "label": "Ngôn ngữ"
+  },
+  "Pomodoro": {
+    "start": "Bắt đầu",
+    "pause": "Tạm dừng",
+    "resume": "Tiếp tục",
+    "stop": "Dừng"
+  }
+}

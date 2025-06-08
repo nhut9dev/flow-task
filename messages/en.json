@@ -1,0 +1,16 @@
+{
+  "AppLayout": {
+    "home": "Home"
+  },
+  "LocaleSwitcher": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "label": "Language"
+  },
+  "Pomodoro": {
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop"
+  }
+}
