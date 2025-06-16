@@ -6,7 +6,9 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { ReactNode } from 'react';
 
 import SubLayout from '~app/subLayout';
+import { AppSidebar } from '~components/AppSidebar';
 import { cn } from '~lib/utils';
+import { SidebarProvider } from '~ui/sidebar';
 
 import './globals.css';
 
@@ -35,17 +37,23 @@ export default async function LocaleLayout({ children }: Props) {
   const locale = await getLocale();
 
   return (
-    <html
-      lang={locale}
-      className={cn(
-        'flex min-h-screen flex-col bg-slate-100',
-        `${geistSans.variable} ${geistMono.variable} antialiased`,
-        inter.className,
-      )}
-    >
-      <NextIntlClientProvider>
-        <SubLayout>{children}</SubLayout>
-      </NextIntlClientProvider>
+    <html lang={locale}>
+      <body
+        className={cn(
+          'flex min-h-screen flex-col bg-slate-100',
+          `${geistSans.variable} ${geistMono.variable} antialiased`,
+          inter.className,
+        )}
+      >
+        <SidebarProvider>
+          <NextIntlClientProvider>
+            <AppSidebar />
+            <SubLayout>
+              <>{children}</>
+            </SubLayout>
+          </NextIntlClientProvider>
+        </SidebarProvider>
+      </body>
     </html>
   );
 }

@@ -1,11 +1,11 @@
-import Pomodoro from '~components/Pomodoro';
 import PomodoroSetting from '~components/PomodoroSetting';
 
-export default function Home() {
+const Settings = () => {
   return (
-    <div>
-      <Pomodoro />
+    <div className="flex justify-center w-full">
       <PomodoroSetting />
     </div>
   );
-}
+};
+
+export default Settings;

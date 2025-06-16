@@ -12,5 +12,13 @@
     "pause": "Pause",
     "resume": "Resume",
     "stop": "Stop"
+  },
+  "PomodoroSetting": {
+    "workDuration": "Work duration",
+    "shortBreakDuration": "Short break duration",
+    "longBreakDuration": "Long break duration",
+    "longBreakInterval": "Long break interval",
+    "autoStartPomodoro": "Auto start pomodoro",
+    "autoStartBreak": "Auto start pomodoro"
   }
 }

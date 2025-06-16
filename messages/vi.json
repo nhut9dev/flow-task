@@ -12,5 +12,8 @@
     "pause": "Tạm dừng",
     "resume": "Tiếp tục",
     "stop": "Dừng"
+  },
+  "PomodoroSetting": {
+    "workDuration": ""
   }
 }
