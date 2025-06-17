@@ -3,7 +3,7 @@ import PomodoroSetting from '~components/PomodoroSetting';
 
 export default function Home() {
   return (
-    <div>
+    <div className="p-4">
       <Pomodoro />
       <PomodoroSetting />
     </div>

@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 
 import SubLayout from '~app/subLayout';
 import { AppSidebar } from '~components/AppSidebar';
+import { ThemeProvider } from '~components/ThemeProvider';
 import { cn } from '~lib/utils';
 import { SidebarProvider } from '~ui/sidebar';
 
@@ -37,7 +38,7 @@ export default async function LocaleLayout({ children }: Props) {
   const locale = await getLocale();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={cn(
           'flex min-h-screen flex-col bg-slate-100',
@@ -45,14 +46,19 @@ export default async function LocaleLayout({ children }: Props) {
           inter.className,
         )}
       >
-        <SidebarProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <NextIntlClientProvider>
-            <AppSidebar />
-            <SubLayout>
-              <>{children}</>
-            </SubLayout>
+            <SidebarProvider>
+              <AppSidebar />
+              <SubLayout>{children}</SubLayout>
+            </SidebarProvider>
           </NextIntlClientProvider>
-        </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

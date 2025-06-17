@@ -1,18 +1,14 @@
 'use client';
 
-import BreadcrumbCurrent from '~components/BreadcrumbCurrent';
-import { SidebarTrigger } from '~ui/sidebar';
+import Footer from '~components/Footer';
+import Header from '~components/Header';
 
-// provider - session - header - footer
 export default function SubLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full">
-      <header className="flex items-center">
-        <SidebarTrigger />
-        <BreadcrumbCurrent />
-      </header>
-      <main>{children}</main>
-      <footer>footer</footer>
+    <div className="w-full bg-background">
+      <Header />
+      <main className="p-2	min-h-[calc(100%-4rem)]">{children}</main>
+      <Footer />
     </div>
   );
 }
