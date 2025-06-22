@@ -12,7 +12,7 @@ import {
   SidebarSeparator,
 } from '~ui/sidebar';
 
-export function SidebarRight({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export default function SidebarRight({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="none" className="sticky top-0 hidden border-l h-svh lg:flex" {...props}>
       <SidebarHeader className="h-16 border-b border-sidebar-border">Header</SidebarHeader>
