@@ -155,6 +155,9 @@
 
 /* Dark mode handling */
 @layer base {
+  button {
+    @apply cursor-pointer;
+  }
   /* Typography System */
   h1 {
     @apply text-4xl font-bold tracking-tight lg:text-5xl;
