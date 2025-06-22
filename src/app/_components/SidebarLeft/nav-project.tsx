@@ -1,7 +1,8 @@
 'use client';
 
-import { Folder, Forward, type LucideIcon, MoreHorizontal, Trash2 } from 'lucide-react';
+import { Folder, Forward, type LucideIcon, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 
+import { CreateProjectForm } from '~app/_components/SidebarLeft/create-project-form';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +33,15 @@ export function NavProjects({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <div className="flex items-center justify-between">
+        <SidebarGroupLabel>Projects</SidebarGroupLabel>
+        <CreateProjectForm>
+          <SidebarMenuAction>
+            <Plus />
+            <span className="sr-only">Add Project</span>
+          </SidebarMenuAction>
+        </CreateProjectForm>
+      </div>
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
