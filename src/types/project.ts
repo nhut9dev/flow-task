@@ -3,6 +3,7 @@ export interface Project {
   name: string;
   folderId?: string;
   taskIds: string[];
+  disabled?: boolean;
   createdAt: string;
   modifiedAt: string;
 }

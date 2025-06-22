@@ -1,5 +1,5 @@
+import PomodoroSetting from '~app/settings/_components/PomodoroSettings';
 import Pomodoro from '~components/Pomodoro';
-import PomodoroSetting from '~components/PomodoroSetting';
 
 export default function Home() {
   return (

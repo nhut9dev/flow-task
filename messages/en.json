@@ -1,4 +1,10 @@
 {
+  "Common": {
+    "appName": "Flow task",
+    "save": "Save",
+    "cancel": "Cancel",
+    "reset": "Reset"
+  },
   "AppLayout": {
     "home": "Home"
   },
@@ -19,6 +25,6 @@
     "longBreakDuration": "Long break duration",
     "longBreakInterval": "Long break interval",
     "autoStartPomodoro": "Auto start pomodoro",
-    "autoStartBreak": "Auto start pomodoro"
+    "autoStartBreak": "Auto start break"
   }
 }

@@ -9,6 +9,7 @@ interface PomodoroState {
   currentSession: PomodoroSession | null;
   pastSessions: PomodoroSession[];
   pomodoroSetting: PomodoroSetting;
+  isHydrated: boolean;
 
   startSession: (session: PomodoroSession) => void;
   stopSession: () => void;
@@ -26,6 +27,7 @@ export const usePomodoroStore = create<PomodoroState>()(
       currentSession: null,
       pastSessions: [],
       pomodoroSetting: POMODORO_SETTING_DEFAULT,
+      isHydrated: false,
 
       startSession: (session) => {
         set({
@@ -57,6 +59,17 @@ export const usePomodoroStore = create<PomodoroState>()(
     }),
     {
       name: POMODORO_STORAGE_NAME,
+      onRehydrateStorage: () => (state) => {
+        if (state && state.isHydrated !== undefined) {
+          setTimeout(() => {
+            state.isHydrated = true;
+          }, 0);
+        } else {
+          setTimeout(() => {
+            state.isHydrated = false;
+          }, 0);
+        }
+      },
     },
   ),
 );

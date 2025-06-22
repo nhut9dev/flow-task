@@ -5,8 +5,8 @@ import { Inter } from 'next/font/google';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ReactNode } from 'react';
 
+import AppSidebar from '~app/_components/AppSidebar';
 import SubLayout from '~app/subLayout';
-import { AppSidebar } from '~components/AppSidebar';
 import { ThemeProvider } from '~components/ThemeProvider';
 import { cn } from '~lib/utils';
 import { SidebarProvider } from '~ui/sidebar';
@@ -54,8 +54,9 @@ export default async function LocaleLayout({ children }: Props) {
         >
           <NextIntlClientProvider>
             <SidebarProvider>
-              <AppSidebar />
-              <SubLayout>{children}</SubLayout>
+              <AppSidebar>
+                <SubLayout>{children}</SubLayout>
+              </AppSidebar>
             </SidebarProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

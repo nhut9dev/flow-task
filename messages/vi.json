@@ -1,4 +1,10 @@
 {
+  "Common": {
+    "appName": "Flow task",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "reset": "Đặt lại"
+  },
   "AppLayout": {
     "home": "Trang chủ"
   },
@@ -14,6 +20,11 @@
     "stop": "Dừng"
   },
   "PomodoroSetting": {
-    "workDuration": ""
+    "workDuration": "Thời gian làm việc",
+    "shortBreakDuration": "Thời gian nghỉ ngắn",
+    "longBreakDuration": "Thời gian nghỉ dài",
+    "longBreakInterval": "Khoảng thời gian nghỉ dài",
+    "autoStartPomodoro": "Tự động bắt đầu pomodoro",
+    "autoStartBreak": "Tự động bắt đầu nghỉ"
   }
 }

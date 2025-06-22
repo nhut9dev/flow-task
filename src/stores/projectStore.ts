@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { PROJECT_DEFAULT_DATA } from '~constants/project';
 import { Project } from '~types/project';
 
 export const PROJECT_STORAGE_NAME = 'project_storage';
@@ -16,7 +17,7 @@ interface ProjectState {
 export const useProjectStore = create<ProjectState>()(
   persist(
     (set) => ({
-      projects: [],
+      projects: PROJECT_DEFAULT_DATA,
 
       createProject: (project) =>
         set((state) => ({

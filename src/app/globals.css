@@ -155,6 +155,150 @@
 
 /* Dark mode handling */
 @layer base {
+  /* Typography System */
+  h1 {
+    @apply text-4xl font-bold tracking-tight lg:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold tracking-tight lg:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold tracking-tight lg:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl font-semibold tracking-tight lg:text-2xl;
+  }
+
+  h5 {
+    @apply text-lg font-semibold tracking-tight lg:text-xl;
+  }
+
+  h6 {
+    @apply text-base font-semibold tracking-tight lg:text-lg;
+  }
+
+  p {
+    @apply text-base leading-7;
+  }
+
+  small {
+    @apply text-sm font-medium leading-none;
+  }
+
+  blockquote {
+    @apply border-l-4 border-border pl-6 italic;
+  }
+
+  code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+
+  pre {
+    @apply rounded-lg bg-muted p-4 overflow-x-auto;
+  }
+
+  pre code {
+    @apply bg-transparent p-0;
+  }
+
+  /* Additional text utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Font weight utilities */
+  .font-thin {
+    font-weight: 100;
+  }
+
+  .font-extralight {
+    font-weight: 200;
+  }
+
+  .font-light {
+    font-weight: 300;
+  }
+
+  .font-normal {
+    font-weight: 400;
+  }
+
+  .font-medium {
+    font-weight: 500;
+  }
+
+  .font-semibold {
+    font-weight: 600;
+  }
+
+  .font-bold {
+    font-weight: 700;
+  }
+
+  .font-extrabold {
+    font-weight: 800;
+  }
+
+  .font-black {
+    font-weight: 900;
+  }
+
+  /* Line height utilities */
+  .leading-none {
+    line-height: 1;
+  }
+
+  .leading-tight {
+    line-height: 1.25;
+  }
+
+  .leading-snug {
+    line-height: 1.375;
+  }
+
+  .leading-normal {
+    line-height: 1.5;
+  }
+
+  .leading-relaxed {
+    line-height: 1.625;
+  }
+
+  .leading-loose {
+    line-height: 2;
+  }
+
+  /* Letter spacing utilities */
+  .tracking-tighter {
+    letter-spacing: -0.05em;
+  }
+
+  .tracking-tight {
+    letter-spacing: -0.025em;
+  }
+
+  .tracking-normal {
+    letter-spacing: 0em;
+  }
+
+  .tracking-wide {
+    letter-spacing: 0.025em;
+  }
+
+  .tracking-wider {
+    letter-spacing: 0.05em;
+  }
+
+  .tracking-widest {
+    letter-spacing: 0.1em;
+  }
 }
 
 @theme inline {
