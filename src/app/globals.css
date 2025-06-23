@@ -302,6 +302,26 @@
   .tracking-widest {
     letter-spacing: 0.1em;
   }
+
+  /* Input and Select global styles */
+  input,
+  select,
+  optgroup,
+  textarea {
+    background-color: var(--color-input);
+    color: var(--color-foreground);
+  }
+
+  input::placeholder,
+  select::placeholder,
+  textarea::placeholder {
+    color: var(--color-muted-foreground);
+    opacity: 1;
+  }
+
+  button {
+    color: var(--color-foreground);
+  }
 }
 
 @theme inline {

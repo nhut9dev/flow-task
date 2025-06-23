@@ -17,6 +17,8 @@ import * as React from 'react';
 import { NavMain } from '~app/_components/SidebarLeft/nav-main';
 import { NavProjects } from '~app/_components/SidebarLeft/nav-project';
 import { NavUser } from '~app/_components/SidebarLeft/nav-user';
+import { useFolderStore } from '~stores/folderStore';
+import { useProjectStore } from '~stores/projectStore';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '~ui/sidebar';
 
 import Header from './header';
@@ -151,14 +153,28 @@ const data = {
 };
 
 export default function SidebarLeft({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const folders = useFolderStore((state) => state.folders);
+  const projects = useProjectStore((state) => state.projects);
+  const [selectedFolderId, setSelectedFolderId] = React.useState<string | null>(null); // null = all folders
+
+  // Filter projects by selected folder
+  const filteredProjects = React.useMemo(() => {
+    if (!selectedFolderId) return projects;
+    return projects.filter((project) => project.folderId === selectedFolderId);
+  }, [projects, selectedFolderId]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <Header teams={data.teams} />
+        <Header
+          folders={folders}
+          selectedFolderId={selectedFolderId}
+          setSelectedFolderId={setSelectedFolderId}
+        />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavProjects projects={filteredProjects} selectedFolderId={selectedFolderId} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

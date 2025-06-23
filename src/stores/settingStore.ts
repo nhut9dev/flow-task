@@ -44,10 +44,8 @@ export const useSettingsStore = create<SettingsState>()(
         })),
       addRecentIcon: (iconName) =>
         set((state) => {
-          const recentIcons = [iconName, ...state.appSetting.recentIcons].slice(
-            0,
-            MAX_RECENT_ICONS,
-          );
+          const filtered = state.appSetting.recentIcons.filter((name) => name !== iconName);
+          const recentIcons = [iconName, ...filtered].slice(0, MAX_RECENT_ICONS);
           return {
             appSetting: {
               ...state.appSetting,

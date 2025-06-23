@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
 import { SelectIcon } from '~components/SelectIcon';
-import { useProjectStore } from '~stores/projectStore';
+import { useFolderStore } from '~stores/folderStore';
 import { Button } from '~ui/button';
 import {
   Dialog,
@@ -22,19 +22,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '~ui/input';
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Project name is required'),
+  name: z.string().min(1, 'Folder name is required'),
   icon: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-interface CreateProjectFormProps {
-  children: React.ReactNode;
-  folderId?: string | null;
-}
-
-export function CreateProjectForm({ children, folderId }: CreateProjectFormProps) {
-  const createProject = useProjectStore((state) => state.createProject);
+export function CreateFolderForm({ children }: { children: React.ReactNode }) {
+  const createFolder = useFolderStore((state) => state.createFolder);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,12 +39,11 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
   });
 
   const onSubmit = (values: FormValues) => {
-    createProject({
+    createFolder({
       id: uuidv4(),
       name: values.name,
       icon: values.icon,
-      folderId: folderId || undefined,
-      taskIds: [],
+      projectIds: [],
       createdAt: dayjs().toISOString(),
       modifiedAt: dayjs().toISOString(),
     });
@@ -62,9 +56,9 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Project</DialogTitle>
+          <DialogTitle>Create Folder</DialogTitle>
           <DialogDescription>
-            Enter a name and choose an icon for your new project.
+            Enter a name and choose an icon for your new folder.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -74,9 +68,9 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Project Name</FormLabel>
+                  <FormLabel>Folder Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Marketing Campaign" {...field} />
+                    <Input placeholder="e.g. Marketing" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

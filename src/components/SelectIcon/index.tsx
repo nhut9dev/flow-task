@@ -51,10 +51,13 @@ export function SelectIcon({ value, onChange, className }: SelectIconProps) {
     return allIcons.filter((name) => name.toLowerCase().includes(search.toLowerCase()));
   }, [search]);
 
-  const renderIconList = (icons: IconName[], withFavoriteButton = false) => (
+  const renderIconList = (icons: IconName[], withFavoriteButton = false, type = 'icon') => (
     <div className="grid grid-cols-6 gap-1 p-2">
       {icons.map((iconName) => (
-        <div key={iconName} className="group relative flex justify-center items-center">
+        <div
+          key={`${type}-${iconName}`}
+          className="group relative flex justify-center items-center"
+        >
           <Button
             variant="ghost"
             size="icon"
@@ -120,21 +123,21 @@ export function SelectIcon({ value, onChange, className }: SelectIconProps) {
               {favoriteIcons.length > 0 && (
                 <>
                   <div className="p-2 text-xs text-muted-foreground">Favorites</div>
-                  {renderIconList(favoriteIcons, true)}
+                  {renderIconList(favoriteIcons, true, 'favorite')}
                   <Separator />
                 </>
               )}
               {recentIcons.length > 0 && (
                 <>
                   <div className="p-2 text-xs text-muted-foreground">Recents</div>
-                  {renderIconList(recentIcons, true)}
+                  {renderIconList(recentIcons, true, 'recent')}
                   <Separator />
                 </>
               )}
             </>
           )}
           <div className="p-2 text-xs text-muted-foreground">Icons</div>
-          {renderIconList(filteredIcons, true)}
+          {renderIconList(filteredIcons, true, 'icon')}
         </ScrollArea>
       </PopoverContent>
     </Popover>
