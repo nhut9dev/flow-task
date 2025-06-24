@@ -26,5 +26,14 @@
     "longBreakInterval": "Long break interval",
     "autoStartPomodoro": "Auto start pomodoro",
     "autoStartBreak": "Auto start break"
+  },
+  "Project": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "thisWeek": "This Week",
+    "highProperty": "High Priority",
+    "mediumProperty": "Medium Priority",
+    "lowProperty": "Low Priority",
+    "planned": "Planned"
   }
 }

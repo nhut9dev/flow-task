@@ -13,7 +13,7 @@ export const PROJECT_DEFAULT_KEY = {
 export const PROJECT_DEFAULT_DATA = [
   {
     id: PROJECT_DEFAULT_KEY.TODAY,
-    name: PROJECT_DEFAULT_KEY.TODAY,
+    name: `Project.${PROJECT_DEFAULT_KEY.TODAY}`,
     taskIds: [],
     disabled: true,
     createdAt: dayjs().toISOString(),
@@ -21,7 +21,7 @@ export const PROJECT_DEFAULT_DATA = [
   },
   {
     id: PROJECT_DEFAULT_KEY.TOMORROW,
-    name: PROJECT_DEFAULT_KEY.TOMORROW,
+    name: `Project.${PROJECT_DEFAULT_KEY.TOMORROW}`,
     taskIds: [],
     disabled: true,
     createdAt: dayjs().toISOString(),
@@ -29,7 +29,7 @@ export const PROJECT_DEFAULT_DATA = [
   },
   {
     id: PROJECT_DEFAULT_KEY.THIS_WEEK,
-    name: PROJECT_DEFAULT_KEY.THIS_WEEK,
+    name: `Project.${PROJECT_DEFAULT_KEY.THIS_WEEK}`,
     taskIds: [],
     disabled: true,
     createdAt: dayjs().toISOString(),
@@ -37,7 +37,7 @@ export const PROJECT_DEFAULT_DATA = [
   },
   {
     id: PROJECT_DEFAULT_KEY.HIGH_PROPERTY,
-    name: PROJECT_DEFAULT_KEY.HIGH_PROPERTY,
+    name: `Project.${PROJECT_DEFAULT_KEY.HIGH_PROPERTY}`,
     taskIds: [],
     disabled: true,
     createdAt: dayjs().toISOString(),
@@ -45,7 +45,7 @@ export const PROJECT_DEFAULT_DATA = [
   },
   {
     id: PROJECT_DEFAULT_KEY.MEDIUM_PROPERTY,
-    name: PROJECT_DEFAULT_KEY.MEDIUM_PROPERTY,
+    name: `Project.${PROJECT_DEFAULT_KEY.MEDIUM_PROPERTY}`,
     taskIds: [],
     disabled: true,
     createdAt: dayjs().toISOString(),
@@ -53,7 +53,7 @@ export const PROJECT_DEFAULT_DATA = [
   },
   {
     id: PROJECT_DEFAULT_KEY.LOW_PROPERTY,
-    name: PROJECT_DEFAULT_KEY.LOW_PROPERTY,
+    name: `Project.${PROJECT_DEFAULT_KEY.LOW_PROPERTY}`,
     taskIds: [],
     disabled: true,
     createdAt: dayjs().toISOString(),
@@ -61,7 +61,7 @@ export const PROJECT_DEFAULT_DATA = [
   },
   {
     id: PROJECT_DEFAULT_KEY.PLANNED,
-    name: PROJECT_DEFAULT_KEY.PLANNED,
+    name: `Project.${PROJECT_DEFAULT_KEY.PLANNED}`,
     taskIds: [],
     disabled: true,
     createdAt: dayjs().toISOString(),

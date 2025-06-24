@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
 import { SelectIcon } from '~components/SelectIcon';
+import { useFolderStore } from '~stores/folderStore';
 import { useProjectStore } from '~stores/projectStore';
 import { Button } from '~ui/button';
 import {
@@ -35,6 +36,8 @@ interface CreateProjectFormProps {
 
 export function CreateProjectForm({ children, folderId }: CreateProjectFormProps) {
   const createProject = useProjectStore((state) => state.createProject);
+  const updateFolder = useFolderStore((state) => state.updateFolder);
+  const folders = useFolderStore((state) => state.folders);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,8 +47,9 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
   });
 
   const onSubmit = (values: FormValues) => {
+    const projectId = uuidv4();
     createProject({
-      id: uuidv4(),
+      id: projectId,
       name: values.name,
       icon: values.icon,
       folderId: folderId || undefined,
@@ -53,6 +57,17 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
       createdAt: dayjs().toISOString(),
       modifiedAt: dayjs().toISOString(),
     });
+
+    // Update folder's projectIds if project is assigned to a folder
+    if (folderId) {
+      const currentFolder = folders.find((f) => f.id === folderId);
+      if (currentFolder) {
+        updateFolder(folderId, {
+          projectIds: [...currentFolder.projectIds, projectId],
+        });
+      }
+    }
+
     form.reset();
     // Close dialog
   };

@@ -26,5 +26,14 @@
     "longBreakInterval": "Khoảng thời gian nghỉ dài",
     "autoStartPomodoro": "Tự động bắt đầu pomodoro",
     "autoStartBreak": "Tự động bắt đầu nghỉ"
+  },
+  "Project": {
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai",
+    "thisWeek": "Tuần này",
+    "highProperty": "Ưu tiên cao",
+    "mediumProperty": "Ưu tiên trung bình",
+    "lowProperty": "Ưu tiên thấp",
+    "planned": "Đã lên kế hoạch"
   }
 }

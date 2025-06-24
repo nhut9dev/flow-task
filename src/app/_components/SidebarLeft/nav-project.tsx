@@ -1,8 +1,13 @@
 'use client';
 
 import { Folder, Forward, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { useMemo } from 'react';
 
 import { CreateProjectForm } from '~app/_components/SidebarLeft/create-project-form';
+import { useFolderStore } from '~stores/folderStore';
+import { useProjectStore } from '~stores/projectStore';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,14 +26,18 @@ import {
   useSidebar,
 } from '~ui/sidebar';
 
-export function NavProjects({
-  projects,
-  selectedFolderId,
-}: {
-  projects: import('~types/project').Project[];
-  selectedFolderId: string | null;
-}) {
+export function NavProjects({ selectedFolderId }: { selectedFolderId: string | null }) {
   const { isMobile } = useSidebar();
+  const t = useTranslations('Project');
+  const folders = useFolderStore((state) => state.folders);
+  const projects = useProjectStore((state) => state.projects);
+
+  const filteredProjects = useMemo(() => {
+    const folderProjects = projects.filter((project) => !project.disabled && project.folderId);
+
+    if (!selectedFolderId) return folderProjects;
+    return folderProjects.filter((project) => project.folderId === selectedFolderId);
+  }, [projects, selectedFolderId]);
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -42,14 +51,23 @@ export function NavProjects({
         </CreateProjectForm>
       </div>
       <SidebarMenu>
-        {projects.map((project) => {
+        {filteredProjects.map((project) => {
+          const projectName = project.name.startsWith('Project.')
+            ? t(project.name.replace('Project.', ''))
+            : project.name;
+
+          const folder = selectedFolderId ? null : folders.find((f) => f.id === project.folderId);
+          const displayName = selectedFolderId
+            ? projectName
+            : `${projectName} (${folder?.name || 'Unknown'})`;
+
           return (
             <SidebarMenuItem key={project.id}>
               <SidebarMenuButton asChild>
-                <a href={`/projects/${project.id}`}>
+                <Link href={`/projects/${project.id}`}>
                   {project.icon ? <Icon name={project.icon as any} /> : <Folder />}
-                  <span>{project.name}</span>
-                </a>
+                  <span>{displayName}</span>
+                </Link>
               </SidebarMenuButton>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

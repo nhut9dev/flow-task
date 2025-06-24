@@ -84,7 +84,7 @@ export default function Header({
               </div>
               All folders
             </DropdownMenuItem>
-            {folders.map((folder, index) => (
+            {folders.map((folder) => (
               <DropdownMenuItem
                 key={folder.id}
                 onClick={() => setSelectedFolderId(folder.id)}
@@ -98,7 +98,7 @@ export default function Header({
                   )}
                 </div>
                 {folder.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                <DropdownMenuShortcut>{folder.projectIds.length}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
