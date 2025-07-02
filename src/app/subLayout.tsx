@@ -2,10 +2,13 @@
 
 import Footer from '~components/Footer';
 import Header from '~components/Header';
+import { useInitProjectStore } from '~hooks/useInitStore';
 
 import AppSidebar from './_components/AppSidebar';
 
 export default function SubLayout({ children }: { children: React.ReactNode }) {
+  useInitProjectStore();
+
   return (
     <AppSidebar>
       <div className="w-full bg-background">

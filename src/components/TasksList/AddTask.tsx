@@ -26,7 +26,7 @@ const AddTaskItem = () => {
         title: name,
         status: TASK_STATUS.TODO,
         tags: [],
-        dueDate: '',
+        dueDate: [],
         projectId,
         createdAt: now,
         modifiedAt: now,
