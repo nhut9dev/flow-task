@@ -9,12 +9,18 @@ interface TaskState {
   updateTask: (id: string, updates: Partial<Task>) => void;
   deleteTask: (id: string) => void;
   setTasks: (tasks: Task[]) => void;
+  getTasksByProjectId: (projectId: string) => Task[];
 }
 
 export const useTaskStore = create<TaskState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       tasks: [],
+
+      getTasksByProjectId: (projectId: string) => {
+        const { tasks } = get();
+        return tasks.filter((task) => task.projectId === projectId);
+      },
 
       createTask: (task) =>
         set((state) => ({

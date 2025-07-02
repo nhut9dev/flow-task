@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
+import TasksList from '~components/TasksList';
 import { useProjectStore } from '~stores/projectStore';
 
 export default function ProjectDetail() {
@@ -54,6 +55,10 @@ export default function ProjectDetail() {
               </p>
             )}
           </div>
+        </div>
+        <div className="p-4 border rounded-lg">
+          <h2 className="text-lg font-semibold mb-2">Tasks</h2>
+          <TasksList />
         </div>
       </div>
     </div>

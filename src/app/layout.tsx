@@ -5,7 +5,6 @@ import { Inter } from 'next/font/google';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ReactNode } from 'react';
 
-import AppSidebar from '~app/_components/AppSidebar';
 import SubLayout from '~app/subLayout';
 import { ThemeProvider } from '~components/ThemeProvider';
 import { cn } from '~lib/utils';
