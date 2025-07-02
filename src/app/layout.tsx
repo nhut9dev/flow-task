@@ -54,9 +54,7 @@ export default async function LocaleLayout({ children }: Props) {
         >
           <NextIntlClientProvider>
             <SidebarProvider>
-              <AppSidebar>
-                <SubLayout>{children}</SubLayout>
-              </AppSidebar>
+              <SubLayout>{children}</SubLayout>
             </SidebarProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
