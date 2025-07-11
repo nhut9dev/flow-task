@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { mockTasks } from '~lib/api/mockData';
+import { initDataService } from '~lib/api/initData';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const projectTasks = mockTasks.filter((t) => t.projectId === params.id);
+  const projectTasks = initDataService.getTasksByProject(params.id);
 
   return NextResponse.json({
     data: projectTasks,

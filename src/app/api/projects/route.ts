@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { mockProjects } from '~lib/api/mockData';
+import { initDataService } from '~lib/api/initData';
 
 export async function GET() {
+  const projects = initDataService.getAllProjects();
+
   return NextResponse.json({
-    data: mockProjects,
+    data: projects,
     success: true,
     message: 'Projects fetched successfully',
   });
@@ -26,17 +28,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newProject = {
-      id: Date.now().toString(),
+    const newProject = initDataService.createProject({
       name,
       icon: icon || '📁',
       folderId: folderId || null,
       taskIds: [],
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString(),
-    };
-
-    mockProjects.push(newProject);
+      dueDate: [],
+      disabled: false,
+    });
 
     return NextResponse.json({
       data: newProject,

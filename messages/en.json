@@ -31,9 +31,60 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "thisWeek": "This Week",
-    "highProperty": "High Priority",
-    "mediumProperty": "Medium Priority",
-    "lowProperty": "Low Priority",
-    "planned": "Planned"
+    "highPriority": "High Priority",
+    "mediumPriority": "Medium Priority",
+    "lowPriority": "Low Priority",
+    "planned": "Planned",
+    "backlog": "Backlog",
+    "completed": "Completed",
+    "defaultProjects": "Default Projects",
+    "projects": "Projects",
+    "noProjectsYet": "No projects yet",
+    "addProject": "Add Project",
+    "createProject": "Create Project",
+    "projectName": "Project Name",
+    "projectNamePlaceholder": "e.g. Marketing Campaign",
+    "icon": "Icon",
+    "projectCreated": "Project created successfully",
+    "projectCreationFailed": "Failed to create project",
+    "projectNameRequired": "Project name is required",
+    "projectNotFound": "Project not found",
+    "filterViewDescription": "This is a filter view. Tasks are automatically grouped based on criteria.",
+    "noTasksMatchFilter": "No tasks match this filter. Create tasks with appropriate criteria to see them here.",
+    "noTasksYet": "No tasks yet. Create your first task above!",
+    "noTasks": "No tasks yet"
+  },
+  "Task": {
+    "createTask": "Create Task",
+    "taskTitle": "Task Title",
+    "taskDescription": "Task Description",
+    "taskCreated": "Task created successfully",
+    "taskCreationFailed": "Failed to create task",
+    "taskTitleRequired": "Task title is required",
+    "taskNotFound": "Task not found",
+    "taskUpdated": "Task updated successfully",
+    "taskUpdateFailed": "Failed to update task",
+    "taskDeleted": "Task deleted successfully",
+    "taskDeleteFailed": "Failed to delete task",
+    "addTask": "Add Task",
+    "open": "Open",
+    "delete": "Delete"
+  },
+  "Priority": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "urgent": "Urgent",
+    "critical": "Critical",
+    "normal": "Normal"
+  },
+  "Status": {
+    "todo": "To Do",
+    "inProgress": "In Progress",
+    "done": "Done"
+  },
+  "Sidebar": {
+    "flowTask": "Flow Task",
+    "taskManagement": "Task Management"
   }
 }

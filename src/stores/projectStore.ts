@@ -12,13 +12,16 @@ interface ProjectState {
 
   // Actions
   fetchProjects: () => Promise<void>;
-  fetchProjectsByFolder: (folderId: string) => Promise<void>;
+  fetchProjectsByFolder: (folderId: string | null) => Promise<void>;
   createProject: (projectData: CreateProjectRequest) => Promise<void>;
   updateProject: (id: string, updates: UpdateProjectRequest) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
 
   // Local state management
   setProjects: (projects: Project[]) => void;
+  getInitDataProjects: () => Project[];
+  getRegularProjects: () => Project[];
+  getProjectById: (id: string) => Project | undefined;
 
   // State management
   setLoading: (loading: boolean) => void;
@@ -39,6 +42,21 @@ export const useProjectStore = create<ProjectState>()(
 
       setProjects: (projects) => set({ projects }),
 
+      getInitDataProjects: () => {
+        const { projects } = get();
+        return projects.filter((project) => project.disabled);
+      },
+
+      getRegularProjects: () => {
+        const { projects } = get();
+        return projects.filter((project) => !project.disabled);
+      },
+
+      getProjectById: (id: string) => {
+        const { projects } = get();
+        return projects.find((project) => project.id === id);
+      },
+
       fetchProjects: async () => {
         try {
           set({ loading: true, error: null });
@@ -50,10 +68,11 @@ export const useProjectStore = create<ProjectState>()(
         }
       },
 
-      fetchProjectsByFolder: async (folderId: string) => {
+      fetchProjectsByFolder: async () => {
         try {
           set({ loading: true, error: null });
-          const response = await ProjectApiService.getProjectsByFolder(folderId);
+          // For now, always fetch all projects since we're not using folders
+          const response = await ProjectApiService.getProjects();
           set({ projects: response.data, loading: false });
         } catch (error) {
           set({ error: error as AppError, loading: false });

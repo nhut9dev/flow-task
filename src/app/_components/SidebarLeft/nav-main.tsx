@@ -3,6 +3,7 @@
 import { Folder } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 import { useInitStore } from '~hooks/useInitStore';
 import { useProjectStore } from '~stores/projectStore';
@@ -16,19 +17,34 @@ import {
 } from '~ui/sidebar';
 
 export function NavMain() {
-  const projects = useProjectStore((state) => state.projects);
+  const { getInitDataProjects } = useProjectStore();
   const t = useTranslations('Project');
+  const [isClient, setIsClient] = useState(false);
 
   // Initialize projects
   useInitStore({
     fetchProjects: true,
   });
 
-  const defaultProjects = projects.filter((project) => project.disabled);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Don't render anything until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <SidebarGroup>
+        <SidebarGroupLabel>{t('defaultProjects')}</SidebarGroupLabel>
+        <SidebarMenu>{/* Empty state during SSR */}</SidebarMenu>
+      </SidebarGroup>
+    );
+  }
+
+  const defaultProjects = getInitDataProjects();
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Default Projects</SidebarGroupLabel>
+      <SidebarGroupLabel>{t('defaultProjects')}</SidebarGroupLabel>
       <SidebarMenu>
         {defaultProjects.map((project) => {
           const projectName = project.name.startsWith('Project.')

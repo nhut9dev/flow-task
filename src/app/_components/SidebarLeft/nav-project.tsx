@@ -3,11 +3,10 @@
 import { Folder, Forward, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { CreateProjectForm } from '~app/_components/SidebarLeft/create-project-form';
 import { useInitStore } from '~hooks/useInitStore';
-import { useFolderStore } from '~stores/folderStore';
 import { useProjectStore } from '~stores/projectStore';
 import {
   DropdownMenu,
@@ -24,94 +23,108 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from '~ui/sidebar';
 
 export function NavProjects({ selectedFolderId }: { selectedFolderId: string | null }) {
-  const { isMobile } = useSidebar();
+  const { getRegularProjects } = useProjectStore();
   const t = useTranslations('Project');
-  const folders = useFolderStore((state) => state.folders);
-  const projects = useProjectStore((state) => state.projects);
+  const tTask = useTranslations('Task');
+  const [isClient, setIsClient] = useState(false);
 
   // Initialize projects based on selected folder
   useInitStore({
     fetchProjects: true,
   });
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const filteredProjects = useMemo(() => {
-    if (!projects) return [];
+    if (!isClient) return [];
 
-    const folderProjects = projects.filter((project) => !project.disabled && project.folderId);
+    const regularProjects = getRegularProjects();
 
-    if (!selectedFolderId) return folderProjects;
-    return folderProjects.filter((project) => project.folderId === selectedFolderId);
-  }, [projects, selectedFolderId]);
+    if (!selectedFolderId) return regularProjects;
+    return regularProjects.filter((project) => project.folderId === selectedFolderId);
+  }, [getRegularProjects, selectedFolderId, isClient]);
+
+  const handleDeleteProject = async (projectId: string) => {
+    // TODO: Implement delete project functionality
+    console.log('Delete project:', projectId);
+  };
+
+  if (!isClient) {
+    return (
+      <SidebarGroup>
+        <SidebarGroupLabel>{t('projects')}</SidebarGroupLabel>
+        <SidebarMenu>{/* Empty state during SSR */}</SidebarMenu>
+      </SidebarGroup>
+    );
+  }
+
+  if (!filteredProjects?.length) {
+    return (
+      <SidebarGroup>
+        <SidebarGroupLabel>{t('projects')}</SidebarGroupLabel>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <div className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground">
+              <Folder className="h-4 w-4" />
+              <span>{t('noProjectsYet')}</span>
+            </div>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroup>
+    );
+  }
 
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <div className="flex items-center justify-between">
-        <SidebarGroupLabel>Projects</SidebarGroupLabel>
-        <CreateProjectForm folderId={selectedFolderId}>
-          <SidebarMenuAction>
-            <Plus />
-            <span className="sr-only">Add Project</span>
-          </SidebarMenuAction>
-        </CreateProjectForm>
-      </div>
+    <SidebarGroup>
+      <SidebarGroupLabel>{t('projects')}</SidebarGroupLabel>
       <SidebarMenu>
-        {filteredProjects.map((project) => {
-          const projectName = project.name.startsWith('Project.')
-            ? t(project.name.replace('Project.', ''))
-            : project.name;
-
-          const folder = selectedFolderId ? null : folders?.find((f) => f.id === project.folderId);
-          const displayName = selectedFolderId
-            ? projectName
-            : `${projectName} (${folder?.name || 'Unknown'})`;
-
-          return (
-            <SidebarMenuItem key={project.id}>
-              <SidebarMenuButton asChild>
-                <Link href={`/projects/${project.id}`}>
-                  {project.icon ? <Icon name={project.icon as any} /> : <Folder />}
-                  <span>{displayName}</span>
-                </Link>
-              </SidebarMenuButton>
+        {filteredProjects.map((project) => (
+          <SidebarMenuItem key={project.id}>
+            <SidebarMenuButton asChild>
+              <Link href={`/projects/${project.id}`}>
+                {project.icon ? <Icon name={project.icon as any} /> : <Folder />}
+                <span>{project.name}</span>
+              </Link>
+            </SidebarMenuButton>
+            <SidebarMenuAction>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <SidebarMenuAction showOnHover>
-                    <MoreHorizontal />
-                    <span className="sr-only">More</span>
-                  </SidebarMenuAction>
+                  <button className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground">
+                    <MoreHorizontal className="h-3 w-3" />
+                  </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-48 rounded-lg"
-                  side={isMobile ? 'bottom' : 'right'}
-                  align={isMobile ? 'end' : 'start'}
-                >
-                  <DropdownMenuItem>
-                    <Folder className="text-muted-foreground" />
-                    <span>View Project</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Forward className="text-muted-foreground" />
-                    <span>Share Project</span>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem asChild>
+                    <Link href={`/projects/${project.id}`}>
+                      <Forward className="mr-2 h-4 w-4" />
+                      {tTask('open')}
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Trash2 className="text-muted-foreground" />
-                    <span>Delete Project</span>
+                  <DropdownMenuItem
+                    className="text-destructive focus:text-destructive"
+                    onClick={() => handleDeleteProject(project.id)}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    {tTask('delete')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </SidebarMenuItem>
-          );
-        })}
+            </SidebarMenuAction>
+          </SidebarMenuItem>
+        ))}
         <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <MoreHorizontal className="text-sidebar-foreground/70" />
-            <span>More</span>
-          </SidebarMenuButton>
+          <CreateProjectForm folderId={selectedFolderId}>
+            <SidebarMenuButton>
+              <Plus />
+              <span>{t('addProject')}</span>
+            </SidebarMenuButton>
+          </CreateProjectForm>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>

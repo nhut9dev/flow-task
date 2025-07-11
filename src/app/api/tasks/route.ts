@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { mockTasks } from '~lib/api/mockData';
+import { initDataService } from '~lib/api/initData';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get('projectId');
 
-  let filteredTasks = mockTasks;
+  let filteredTasks;
   if (projectId) {
-    filteredTasks = mockTasks.filter((task) => task.projectId === projectId);
+    filteredTasks = initDataService.getTasksByProject(projectId);
+  } else {
+    filteredTasks = initDataService.getAllTasks();
   }
 
   return NextResponse.json({
@@ -21,7 +23,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, description, projectId, tags, dueDate } = body;
+    const { title, description, status, projectId, tags, dueDate } = body;
 
     if (!title) {
       return NextResponse.json(
@@ -34,19 +36,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newTask = {
-      id: Date.now().toString(),
+    const newTask = initDataService.createTask({
       title,
       description: description || '',
-      status: 'todo',
+      status: status || 'todo',
       projectId: projectId || null,
       tags: tags || [],
       dueDate: dueDate || [],
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString(),
-    };
-
-    mockTasks.push(newTask);
+    });
 
     return NextResponse.json({
       data: newTask,

@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import TasksList from '~components/TasksList';
 import { useInitStore } from '~hooks/useInitStore';
@@ -10,8 +11,9 @@ import { useProjectStore } from '~stores/projectStore';
 export default function ProjectDetail() {
   const params = useParams();
   const projectId = params.id as string;
-  const projects = useProjectStore((state) => state.projects) || [];
+  const { getProjectById } = useProjectStore();
   const t = useTranslations('Project');
+  const [isClient, setIsClient] = useState(false);
 
   // Initialize stores with API data
   useInitStore({
@@ -20,12 +22,32 @@ export default function ProjectDetail() {
     projectId,
   });
 
-  const project = projects.find((p) => p.id === projectId);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-muted rounded flex items-center justify-center">
+            <span className="text-sm">📁</span>
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold">Loading...</h1>
+          </div>
+        </div>
+        <TasksList />
+      </div>
+    );
+  }
+
+  const project = getProjectById(projectId);
 
   if (!project) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-muted-foreground">Project not found</p>
+        <p className="text-muted-foreground">{t('projectNotFound')}</p>
       </div>
     );
   }
@@ -35,40 +57,23 @@ export default function ProjectDetail() {
     : project.name;
 
   return (
-    <div className="p-4">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">{projectName}</h1>
-        <p className="text-muted-foreground">Project ID: {project.id}</p>
-      </div>
-
-      <div className="grid gap-4">
-        <div className="p-4 border rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Project Details</h2>
-          <div className="space-y-2">
-            <p>
-              <strong>Name:</strong> {projectName}
-            </p>
-            <p>
-              <strong>Created:</strong> {new Date(project.createdAt).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>Modified:</strong> {new Date(project.modifiedAt).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>Tasks:</strong> {project.taskIds?.length || 0}
-            </p>
-            {project.folderId && (
-              <p>
-                <strong>Folder ID:</strong> {project.folderId}
-              </p>
-            )}
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        {project.icon ? (
+          <span className="text-2xl">{project.icon}</span>
+        ) : (
+          <div className="w-8 h-8 bg-muted rounded flex items-center justify-center">
+            <span className="text-sm">📁</span>
           </div>
-        </div>
-        <div className="p-4 border rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Tasks</h2>
-          <TasksList />
+        )}
+        <div>
+          <h1 className="text-2xl font-semibold">{projectName}</h1>
+          {project.disabled && (
+            <p className="text-sm text-muted-foreground">{t('filterViewDescription')}</p>
+          )}
         </div>
       </div>
+      <TasksList />
     </div>
   );
 }

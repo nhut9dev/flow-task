@@ -5,29 +5,40 @@ import * as React from 'react';
 import { NavMain } from '~app/_components/SidebarLeft/nav-main';
 import { NavProjects } from '~app/_components/SidebarLeft/nav-project';
 import { useInitStore } from '~hooks/useInitStore';
-import { useFolderStore } from '~stores/folderStore';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '~ui/sidebar';
 
 import Header from './header';
 
 export default function SidebarLeft({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const folders = useFolderStore((state) => state.folders) || [];
-  const [selectedFolderId, setSelectedFolderId] = React.useState<string | null>(null); // null = all folders
+  const [selectedFolderId] = React.useState<string | null>(null); // null = all projects
+  const [isClient, setIsClient] = React.useState(false);
 
   // Initialize stores with API data
   useInitStore({
-    fetchFolders: true,
     fetchProjects: true,
   });
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <Sidebar collapsible="icon" {...props}>
+        <SidebarHeader>
+          <Header />
+        </SidebarHeader>
+        <SidebarContent>{/* Loading state during SSR */}</SidebarContent>
+        <SidebarFooter>Footer</SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+    );
+  }
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <Header
-          folders={folders}
-          selectedFolderId={selectedFolderId}
-          setSelectedFolderId={setSelectedFolderId}
-        />
+        <Header />
       </SidebarHeader>
       <SidebarContent>
         <NavMain />

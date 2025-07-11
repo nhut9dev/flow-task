@@ -8,7 +8,7 @@ export interface Task {
   status: TaskStatus;
   tags: string[];
   dueDate: string[];
-  projectId?: string;
+  projectId?: string | null;
   folderId?: string;
   createdAt: string;
   modifiedAt: string;

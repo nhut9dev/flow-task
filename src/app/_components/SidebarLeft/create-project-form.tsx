@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -37,6 +38,7 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
   const createProject = useProjectStore((state) => state.createProject);
   const folders = useFolderStore((state) => state.folders);
   const showToast = useToast();
+  const t = useTranslations('Project');
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -66,13 +68,13 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
       form.reset();
       showToast({
         title: 'Success',
-        description: 'Project created successfully',
+        description: t('projectCreated'),
         variant: 'success',
       });
     } catch (error) {
       showToast({
         title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to create project',
+        description: error instanceof Error ? error.message : t('projectCreationFailed'),
         variant: 'destructive',
       });
     }
@@ -83,7 +85,7 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Project</DialogTitle>
+          <DialogTitle>{t('createProject')}</DialogTitle>
           <DialogDescription>
             Enter a name and choose an icon for your new project.
           </DialogDescription>
@@ -95,9 +97,9 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Project Name</FormLabel>
+                  <FormLabel>{t('projectName')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Marketing Campaign" {...field} />
+                    <Input placeholder={t('projectNamePlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,7 +111,7 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
               name="icon"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Icon</FormLabel>
+                  <FormLabel>{t('icon')}</FormLabel>
                   <FormControl>
                     <SelectIcon {...field} />
                   </FormControl>
@@ -119,7 +121,7 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
             />
 
             <DialogFooter>
-              <Button type="submit">Create</Button>
+              <Button type="submit">{t('createProject')}</Button>
             </DialogFooter>
           </form>
         </Form>

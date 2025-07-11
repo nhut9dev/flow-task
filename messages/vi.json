@@ -31,9 +31,60 @@
     "today": "Hôm nay",
     "tomorrow": "Ngày mai",
     "thisWeek": "Tuần này",
-    "highProperty": "Ưu tiên cao",
-    "mediumProperty": "Ưu tiên trung bình",
-    "lowProperty": "Ưu tiên thấp",
-    "planned": "Đã lên kế hoạch"
+    "highPriority": "Ưu tiên cao",
+    "mediumPriority": "Ưu tiên trung bình",
+    "lowPriority": "Ưu tiên thấp",
+    "planned": "Đã lên kế hoạch",
+    "backlog": "Tồn đọng",
+    "completed": "Đã hoàn thành",
+    "defaultProjects": "Dự án mặc định",
+    "projects": "Dự án",
+    "noProjectsYet": "Chưa có dự án nào",
+    "addProject": "Thêm dự án",
+    "createProject": "Tạo dự án",
+    "projectName": "Tên dự án",
+    "projectNamePlaceholder": "VD: Chiến dịch Marketing",
+    "icon": "Biểu tượng",
+    "projectCreated": "Tạo dự án thành công",
+    "projectCreationFailed": "Tạo dự án thất bại",
+    "projectNameRequired": "Tên dự án là bắt buộc",
+    "projectNotFound": "Không tìm thấy dự án",
+    "filterViewDescription": "Đây là chế độ xem lọc. Các nhiệm vụ được nhóm tự động dựa trên tiêu chí.",
+    "noTasksMatchFilter": "Không có nhiệm vụ nào phù hợp với bộ lọc này. Tạo nhiệm vụ với tiêu chí phù hợp để xem chúng ở đây.",
+    "noTasksYet": "Chưa có nhiệm vụ nào. Tạo nhiệm vụ đầu tiên ở trên!",
+    "noTasks": "Chưa có nhiệm vụ nào"
+  },
+  "Task": {
+    "createTask": "Tạo nhiệm vụ",
+    "taskTitle": "Tiêu đề nhiệm vụ",
+    "taskDescription": "Mô tả nhiệm vụ",
+    "taskCreated": "Tạo nhiệm vụ thành công",
+    "taskCreationFailed": "Tạo nhiệm vụ thất bại",
+    "taskTitleRequired": "Tiêu đề nhiệm vụ là bắt buộc",
+    "taskNotFound": "Không tìm thấy nhiệm vụ",
+    "taskUpdated": "Cập nhật nhiệm vụ thành công",
+    "taskUpdateFailed": "Cập nhật nhiệm vụ thất bại",
+    "taskDeleted": "Xóa nhiệm vụ thành công",
+    "taskDeleteFailed": "Xóa nhiệm vụ thất bại",
+    "addTask": "Thêm nhiệm vụ",
+    "open": "Mở",
+    "delete": "Xóa"
+  },
+  "Priority": {
+    "high": "Cao",
+    "medium": "Trung bình",
+    "low": "Thấp",
+    "urgent": "Khẩn cấp",
+    "critical": "Quan trọng",
+    "normal": "Bình thường"
+  },
+  "Status": {
+    "todo": "Cần làm",
+    "inProgress": "Đang thực hiện",
+    "done": "Hoàn thành"
+  },
+  "Sidebar": {
+    "flowTask": "Flow Task",
+    "taskManagement": "Quản lý nhiệm vụ"
   }
 }

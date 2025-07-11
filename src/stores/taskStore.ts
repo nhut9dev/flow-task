@@ -20,6 +20,7 @@ interface TaskState {
   // Local state management (for optimistic updates)
   setTasks: (tasks: Task[]) => void;
   getTasksByProjectId: (projectId: string) => Task[];
+  getAllTasks: () => Task[];
 
   // State management
   setLoading: (loading: boolean) => void;
@@ -41,6 +42,11 @@ export const useTaskStore = create<TaskState>()(
       getTasksByProjectId: (projectId: string) => {
         const { tasks } = get();
         return tasks.filter((task) => task.projectId === projectId);
+      },
+
+      getAllTasks: () => {
+        const { tasks } = get();
+        return tasks;
       },
 
       setTasks: (tasks) => set({ tasks }),

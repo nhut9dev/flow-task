@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { mockFolders } from '~lib/api/mockData';
-
 export async function GET() {
   return NextResponse.json({
-    data: mockFolders,
+    data: [],
     success: true,
     message: 'Folders fetched successfully',
   });
@@ -26,19 +24,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newFolder = {
-      id: Date.now().toString(),
-      name,
-      icon: icon || '📁',
-      projectIds: [],
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString(),
-    };
-
-    mockFolders.push(newFolder);
-
+    // For now, return success but don't actually create folders
+    // since we're focusing on projects without folders
     return NextResponse.json({
-      data: newFolder,
+      data: { id: Date.now().toString(), name, icon: icon || '📁' },
       success: true,
       message: 'Folder created successfully',
     });

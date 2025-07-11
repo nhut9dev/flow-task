@@ -1,22 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Mock data for development (this should be shared with the main tasks route)
-const tasks = [
-  {
-    id: '1',
-    title: 'Sample Task',
-    description: 'This is a sample task',
-    status: 'todo',
-    projectId: '1',
-    tags: ['sample'],
-    dueDate: [],
-    createdAt: '2024-01-01T00:00:00Z',
-    modifiedAt: '2024-01-01T00:00:00Z',
-  },
-];
+import { initDataService } from '~lib/api/initData';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const task = tasks.find((t) => t.id === params.id);
+  const task = initDataService.getTaskById(params.id);
 
   if (!task) {
     return NextResponse.json(
@@ -39,9 +26,18 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const body = await request.json();
-    const taskIndex = tasks.findIndex((t) => t.id === params.id);
+    const { title, description, status, projectId, tags, dueDate } = body;
 
-    if (taskIndex === -1) {
+    const updatedTask = initDataService.updateTask(params.id, {
+      title,
+      description,
+      status,
+      projectId,
+      tags,
+      dueDate,
+    });
+
+    if (!updatedTask) {
       return NextResponse.json(
         {
           data: null,
@@ -51,14 +47,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         { status: 404 },
       );
     }
-
-    const updatedTask = {
-      ...tasks[taskIndex],
-      ...body,
-      modifiedAt: new Date().toISOString(),
-    };
-
-    tasks[taskIndex] = updatedTask;
 
     return NextResponse.json({
       data: updatedTask,
@@ -78,9 +66,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const taskIndex = tasks.findIndex((t) => t.id === params.id);
+  const success = initDataService.deleteTask(params.id);
 
-  if (taskIndex === -1) {
+  if (!success) {
     return NextResponse.json(
       {
         data: null,
@@ -90,8 +78,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       { status: 404 },
     );
   }
-
-  tasks.splice(taskIndex, 1);
 
   return NextResponse.json({
     data: null,

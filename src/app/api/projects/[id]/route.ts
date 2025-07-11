@@ -1,19 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Mock data for development (this should be shared with the main projects route)
-const projects = [
-  {
-    id: '1',
-    name: 'Default Project',
-    icon: '📁',
-    folderId: null,
-    createdAt: '2024-01-01T00:00:00Z',
-    modifiedAt: '2024-01-01T00:00:00Z',
-  },
-];
+import { initDataService } from '~lib/api/initData';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const project = projects.find((p) => p.id === params.id);
+  const project = initDataService.getProjectById(params.id);
 
   if (!project) {
     return NextResponse.json(
@@ -36,9 +26,17 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const body = await request.json();
-    const projectIndex = projects.findIndex((p) => p.id === params.id);
+    const { name, icon, folderId, taskIds, dueDate } = body;
 
-    if (projectIndex === -1) {
+    const updatedProject = initDataService.updateProject(params.id, {
+      name,
+      icon,
+      folderId,
+      taskIds,
+      dueDate,
+    });
+
+    if (!updatedProject) {
       return NextResponse.json(
         {
           data: null,
@@ -48,14 +46,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         { status: 404 },
       );
     }
-
-    const updatedProject = {
-      ...projects[projectIndex],
-      ...body,
-      modifiedAt: new Date().toISOString(),
-    };
-
-    projects[projectIndex] = updatedProject;
 
     return NextResponse.json({
       data: updatedProject,
@@ -75,20 +65,18 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const projectIndex = projects.findIndex((p) => p.id === params.id);
+  const success = initDataService.deleteProject(params.id);
 
-  if (projectIndex === -1) {
+  if (!success) {
     return NextResponse.json(
       {
         data: null,
         success: false,
-        message: 'Project not found',
+        message: 'Project not found or cannot be deleted',
       },
       { status: 404 },
     );
   }
-
-  projects.splice(projectIndex, 1);
 
   return NextResponse.json({
     data: null,

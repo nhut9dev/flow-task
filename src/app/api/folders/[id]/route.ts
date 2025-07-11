@@ -1,18 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Mock data for development (this should be shared with the main folders route)
-const folders = [
-  {
-    id: '1',
-    name: 'Default Folder',
-    icon: '📁',
-    createdAt: '2024-01-01T00:00:00Z',
-    modifiedAt: '2024-01-01T00:00:00Z',
-  },
-];
+import { mockFolders } from '~lib/api/mockData';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const folder = folders.find((f) => f.id === params.id);
+  const folder = mockFolders.find((f) => f.id === params.id);
 
   if (!folder) {
     return NextResponse.json(
@@ -35,7 +26,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const body = await request.json();
-    const folderIndex = folders.findIndex((f) => f.id === params.id);
+    const folderIndex = mockFolders.findIndex((f) => f.id === params.id);
 
     if (folderIndex === -1) {
       return NextResponse.json(
@@ -49,12 +40,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     const updatedFolder = {
-      ...folders[folderIndex],
+      ...mockFolders[folderIndex],
       ...body,
       modifiedAt: new Date().toISOString(),
     };
 
-    folders[folderIndex] = updatedFolder;
+    mockFolders[folderIndex] = updatedFolder;
 
     return NextResponse.json({
       data: updatedFolder,
@@ -74,7 +65,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const folderIndex = folders.findIndex((f) => f.id === params.id);
+  const folderIndex = mockFolders.findIndex((f) => f.id === params.id);
 
   if (folderIndex === -1) {
     return NextResponse.json(
@@ -87,7 +78,22 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     );
   }
 
-  folders.splice(folderIndex, 1);
+  const folder = mockFolders[folderIndex];
+
+  // Check if folder has projects
+  if (folder.projectIds.length > 0) {
+    return NextResponse.json(
+      {
+        data: null,
+        success: false,
+        message: 'Cannot delete folder with projects. Please move or delete projects first.',
+      },
+      { status: 400 },
+    );
+  }
+
+  // Remove folder from array
+  mockFolders.splice(folderIndex, 1);
 
   return NextResponse.json({
     data: null,
