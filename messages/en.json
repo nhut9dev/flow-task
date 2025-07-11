@@ -68,7 +68,15 @@
     "taskDeleteFailed": "Failed to delete task",
     "addTask": "Add Task",
     "open": "Open",
-    "delete": "Delete"
+    "delete": "Delete",
+    "dueDate": "Due Date",
+    "tags": "Tags",
+    "taskInfo": "Task Information",
+    "createdAt": "Created",
+    "modifiedAt": "Modified",
+    "projectId": "Project ID",
+    "noDueDate": "No due date set",
+    "noTags": "No tags set"
   },
   "Priority": {
     "high": "High",
@@ -79,6 +87,7 @@
     "normal": "Normal"
   },
   "Status": {
+    "status": "Status",
     "todo": "To Do",
     "inProgress": "In Progress",
     "done": "Done"

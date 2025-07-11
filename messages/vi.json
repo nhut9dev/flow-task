@@ -68,7 +68,15 @@
     "taskDeleteFailed": "Xóa nhiệm vụ thất bại",
     "addTask": "Thêm nhiệm vụ",
     "open": "Mở",
-    "delete": "Xóa"
+    "delete": "Xóa",
+    "dueDate": "Ngày hạn",
+    "tags": "Nhãn",
+    "taskInfo": "Thông tin nhiệm vụ",
+    "createdAt": "Tạo lúc",
+    "modifiedAt": "Cập nhật lúc",
+    "projectId": "ID Dự án",
+    "noDueDate": "Chưa có ngày hạn",
+    "noTags": "Chưa có nhãn"
   },
   "Priority": {
     "high": "Cao",
@@ -79,6 +87,7 @@
     "normal": "Bình thường"
   },
   "Status": {
+    "status": "Trạng thái",
     "todo": "Cần làm",
     "inProgress": "Đang thực hiện",
     "done": "Hoàn thành"

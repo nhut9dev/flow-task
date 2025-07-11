@@ -1,12 +1,15 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useTaskFocusStore } from '~stores/taskFocusStore';
 
 export function useAction() {
-  const params = useParams();
+  const { focusedTaskId, setFocusedTask, clearFocus } = useTaskFocusStore();
+  const isTaskFocused = Boolean(focusedTaskId);
 
-  const taskId = (params as any)?.taskId as string | undefined;
-  const isTaskFocused = Boolean(taskId);
-
-  return { isTaskFocused, taskId };
+  return {
+    isTaskFocused,
+    taskId: focusedTaskId,
+    setFocusedTask,
+    clearFocus,
+  };
 }

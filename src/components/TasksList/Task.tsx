@@ -1,6 +1,7 @@
 'use client';
 
 import { TASK_STATUS } from '~constants/task';
+import { useAction } from '~hooks/useAction';
 import { useTaskStore } from '~stores/taskStore';
 import type { Task as TaskType } from '~types/task';
 
@@ -15,9 +16,25 @@ interface TaskProps {
 
 function Task({ task }: TaskProps) {
   const { updateTask } = useTaskStore();
+  const { setFocusedTask, taskId } = useAction();
+
+  const handleTaskClick = (e: React.MouseEvent) => {
+    // Prevent click when clicking on checkbox
+    if ((e.target as HTMLElement).closest('[role="checkbox"]')) {
+      return;
+    }
+    setFocusedTask(task.id);
+  };
+
+  const isFocused = taskId === task.id;
 
   return (
-    <div className="flex items-center gap-3 p-3 border-b hover:bg-accent/30 transition group">
+    <div
+      className={`flex items-center gap-3 p-3 border-b hover:bg-accent/30 transition group cursor-pointer ${
+        isFocused ? 'bg-accent/50 border-l-4 border-l-primary' : ''
+      }`}
+      onClick={handleTaskClick}
+    >
       <Checkbox
         checked={task.status === TASK_STATUS.DONE}
         onCheckedChange={(checked) =>
