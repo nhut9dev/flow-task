@@ -120,14 +120,14 @@ export function SelectIcon({ value, onChange, className }: SelectIconProps) {
         <ScrollArea className="h-64">
           {!search && (
             <>
-              {favoriteIcons.length > 0 && (
+              {favoriteIcons?.length > 0 && (
                 <>
                   <div className="p-2 text-xs text-muted-foreground">Favorites</div>
                   {renderIconList(favoriteIcons, true, 'favorite')}
                   <Separator />
                 </>
               )}
-              {recentIcons.length > 0 && (
+              {recentIcons?.length > 0 && (
                 <>
                   <div className="p-2 text-xs text-muted-foreground">Recents</div>
                   {renderIconList(recentIcons, true, 'recent')}

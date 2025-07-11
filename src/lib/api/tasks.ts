@@ -18,7 +18,8 @@ export interface UpdateTaskRequest extends Partial<CreateTaskRequest> {
 
 export class TaskApiService {
   static async getTasks(projectId?: string): Promise<ApiResponse<Task[]>> {
-    return apiClient.get<Task[]>('/tasks', { projectId });
+    const params = projectId ? { projectId } : undefined;
+    return apiClient.get<Task[]>('/tasks', params);
   }
 
   static async getTaskById(id: string): Promise<ApiResponse<Task>> {
@@ -38,7 +39,7 @@ export class TaskApiService {
   }
 
   static async getTasksByProject(projectId: string): Promise<ApiResponse<Task[]>> {
-    return apiClient.get<Task[]>(`/projects/${projectId}/tasks`);
+    return apiClient.get<Task[]>('/tasks', { projectId });
   }
 
   static async getTasksByFolder(folderId: string): Promise<ApiResponse<Task[]>> {

@@ -1,5 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
+import { AppError } from '~lib/errors/AppError';
+
 export interface ApiResponse<T = any> {
   data: T;
   message?: string;
@@ -48,9 +50,21 @@ class ApiClient {
       },
       (error: AxiosError<ApiError>) => {
         this.handleError(error);
-        return Promise.reject(error);
+        return Promise.reject(this.createAppError(error));
       },
     );
+  }
+
+  private createAppError(error: AxiosError<ApiError>): AppError {
+    if (error.response?.data?.message) {
+      return new AppError(error.response.data.message, error.response.status || 500);
+    }
+
+    if (error.message) {
+      return new AppError(error.message, error.response?.status || 500);
+    }
+
+    return new AppError('Network error', 500);
   }
 
   private getAuthToken(): string | null {

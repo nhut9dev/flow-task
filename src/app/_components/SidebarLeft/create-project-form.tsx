@@ -1,12 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
-import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
 import { SelectIcon } from '~components/SelectIcon';
+import { useToast } from '~hooks/useToast';
 import { useFolderStore } from '~stores/folderStore';
 import { useProjectStore } from '~stores/projectStore';
 import { Button } from '~ui/button';
@@ -36,8 +35,9 @@ interface CreateProjectFormProps {
 
 export function CreateProjectForm({ children, folderId }: CreateProjectFormProps) {
   const createProject = useProjectStore((state) => state.createProject);
-  const updateFolder = useFolderStore((state) => state.updateFolder);
   const folders = useFolderStore((state) => state.folders);
+  const showToast = useToast();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,30 +46,36 @@ export function CreateProjectForm({ children, folderId }: CreateProjectFormProps
     },
   });
 
-  const onSubmit = (values: FormValues) => {
-    const projectId = uuidv4();
-    createProject({
-      id: projectId,
-      name: values.name,
-      icon: values.icon,
-      folderId: folderId || undefined,
-      taskIds: [],
-      createdAt: dayjs().toISOString(),
-      modifiedAt: dayjs().toISOString(),
-    });
+  const onSubmit = async (values: FormValues) => {
+    try {
+      await createProject({
+        name: values.name,
+        icon: values.icon,
+        folderId: folderId || undefined,
+      });
 
-    // Update folder's projectIds if project is assigned to a folder
-    if (folderId) {
-      const currentFolder = folders.find((f) => f.id === folderId);
-      if (currentFolder) {
-        updateFolder(folderId, {
-          projectIds: [...currentFolder.projectIds, projectId],
-        });
+      // Update folder's projectIds if project is assigned to a folder
+      if (folderId) {
+        const currentFolder = folders.find((f) => f.id === folderId);
+        if (currentFolder) {
+          // Note: This would need to be updated when we have the actual project ID from API
+          // For now, we'll skip this until we have proper folder-project relationship
+        }
       }
-    }
 
-    form.reset();
-    // Close dialog
+      form.reset();
+      showToast({
+        title: 'Success',
+        description: 'Project created successfully',
+        variant: 'success',
+      });
+    } catch (error) {
+      showToast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to create project',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (

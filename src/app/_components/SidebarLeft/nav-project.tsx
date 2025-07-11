@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 
 import { CreateProjectForm } from '~app/_components/SidebarLeft/create-project-form';
+import { useInitStore } from '~hooks/useInitStore';
 import { useFolderStore } from '~stores/folderStore';
 import { useProjectStore } from '~stores/projectStore';
 import {
@@ -32,7 +33,14 @@ export function NavProjects({ selectedFolderId }: { selectedFolderId: string | n
   const folders = useFolderStore((state) => state.folders);
   const projects = useProjectStore((state) => state.projects);
 
+  // Initialize projects based on selected folder
+  useInitStore({
+    fetchProjects: true,
+  });
+
   const filteredProjects = useMemo(() => {
+    if (!projects) return [];
+
     const folderProjects = projects.filter((project) => !project.disabled && project.folderId);
 
     if (!selectedFolderId) return folderProjects;
@@ -56,7 +64,7 @@ export function NavProjects({ selectedFolderId }: { selectedFolderId: string | n
             ? t(project.name.replace('Project.', ''))
             : project.name;
 
-          const folder = selectedFolderId ? null : folders.find((f) => f.id === project.folderId);
+          const folder = selectedFolderId ? null : folders?.find((f) => f.id === project.folderId);
           const displayName = selectedFolderId
             ? projectName
             : `${projectName} (${folder?.name || 'Unknown'})`;

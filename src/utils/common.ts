@@ -9,3 +9,8 @@ export function isEqual(obj1: Record<string, any>, obj2: Record<string, any>): b
 
   return true;
 }
+
+// Utility để nối className (dùng cho shadcn-ui)
+export function cn(...inputs: (string | undefined | null | false)[]): string {
+  return inputs.filter(Boolean).join(' ');
+}

@@ -16,7 +16,7 @@ const TasksListWithStore = () => {
 
   const { loading, error, getTasksByProjectId, fetchTasksByProject, clearError } = useTaskStore();
 
-  const projectTasks = getTasksByProjectId(projectId);
+  const projectTasks = getTasksByProjectId(projectId) || [];
 
   useEffect(() => {
     if (projectId) {
@@ -58,7 +58,7 @@ const TasksListWithStore = () => {
   return (
     <div className="space-y-1">
       <AddTaskItem />
-      {!projectTasks.length ? (
+      {!projectTasks?.length ? (
         <div className="p-3 text-center text-muted-foreground">
           No tasks yet. Create your first task above!
         </div>

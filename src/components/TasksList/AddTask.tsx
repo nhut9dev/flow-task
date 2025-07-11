@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
-import { TASK_STATUS } from '~constants/task';
+import { useToast } from '~hooks/useToast';
 import { useTaskStore } from '~stores/taskStore';
 
 import { Button } from '../ui/button';
@@ -13,26 +13,35 @@ const AddTaskItem = () => {
   const params = useParams();
   const projectId = params.id as string;
   const { createTask } = useTaskStore();
+  const showToast = useToast();
 
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState('');
 
   const handleAddTask = useCallback(
-    (name: string) => {
+    async (name: string) => {
       if (!name) return;
-      const now = new Date().toISOString();
-      createTask({
-        id: Date.now().toString(),
-        title: name,
-        status: TASK_STATUS.TODO,
-        tags: [],
-        dueDate: [],
-        projectId,
-        createdAt: now,
-        modifiedAt: now,
-      });
+      try {
+        await createTask({
+          title: name,
+          tags: [],
+          dueDate: [],
+          projectId,
+        });
+        showToast({
+          title: 'Success',
+          description: 'Task created successfully',
+          variant: 'success',
+        });
+      } catch (error) {
+        showToast({
+          title: 'Error',
+          description: error instanceof Error ? error.message : 'Failed to create task',
+          variant: 'destructive',
+        });
+      }
     },
-    [createTask, projectId],
+    [createTask, projectId, showToast],
   );
 
   const handleStart = () => {
@@ -44,9 +53,9 @@ const AddTaskItem = () => {
     setValue('');
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (value.trim()) {
-      handleAddTask(value.trim());
+      await handleAddTask(value.trim());
       setEditing(false);
       setValue('');
     } else {

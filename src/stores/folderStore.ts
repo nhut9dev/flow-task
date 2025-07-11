@@ -27,7 +27,7 @@ interface FolderState {
 
 export const useFolderStore = create<FolderState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       folders: [],
       loading: false,
       error: null,
@@ -44,48 +44,34 @@ export const useFolderStore = create<FolderState>()(
           const response = await FolderApiService.getFolders();
           set({ folders: response.data, loading: false });
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to fetch folders', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
       createFolder: async (folderData: CreateFolderRequest) => {
         try {
           set({ loading: true, error: null });
-          const response = await FolderApiService.createFolder(folderData);
+          await FolderApiService.createFolder(folderData);
 
-          // Optimistic update
-          set((state) => ({
-            folders: [...state.folders, response.data],
-            loading: false,
-          }));
+          // Fetch lại toàn bộ folders sau khi tạo
+          await get().fetchFolders();
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to create folder', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
       updateFolder: async (id: string, updates: UpdateFolderRequest) => {
         try {
           set({ loading: true, error: null });
-          const response = await FolderApiService.updateFolder(id, updates);
+          await FolderApiService.updateFolder(id, updates);
 
-          // Optimistic update
-          set((state) => ({
-            folders: state.folders.map((folder) =>
-              folder.id === id ? { ...folder, ...response.data } : folder,
-            ),
-            loading: false,
-          }));
+          // Fetch lại toàn bộ folders sau khi cập nhật
+          await get().fetchFolders();
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to update folder', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
@@ -94,16 +80,11 @@ export const useFolderStore = create<FolderState>()(
           set({ loading: true, error: null });
           await FolderApiService.deleteFolder(id);
 
-          // Optimistic update
-          set((state) => ({
-            folders: state.folders.filter((folder) => folder.id !== id),
-            loading: false,
-          }));
+          // Fetch lại toàn bộ folders sau khi xóa
+          await get().fetchFolders();
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to delete folder', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
     }),

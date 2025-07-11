@@ -28,7 +28,7 @@ interface ProjectState {
 
 export const useProjectStore = create<ProjectState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       projects: [],
       loading: false,
       error: null,
@@ -45,10 +45,8 @@ export const useProjectStore = create<ProjectState>()(
           const response = await ProjectApiService.getProjects();
           set({ projects: response.data, loading: false });
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to fetch projects', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
@@ -58,50 +56,34 @@ export const useProjectStore = create<ProjectState>()(
           const response = await ProjectApiService.getProjectsByFolder(folderId);
           set({ projects: response.data, loading: false });
         } catch (error) {
-          const appError =
-            error instanceof AppError
-              ? error
-              : new AppError('Failed to fetch folder projects', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
       createProject: async (projectData: CreateProjectRequest) => {
         try {
           set({ loading: true, error: null });
-          const response = await ProjectApiService.createProject(projectData);
+          await ProjectApiService.createProject(projectData);
 
-          // Optimistic update
-          set((state) => ({
-            projects: [...state.projects, response.data],
-            loading: false,
-          }));
+          // Fetch lại toàn bộ projects sau khi tạo
+          await get().fetchProjects();
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to create project', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
       updateProject: async (id: string, updates: UpdateProjectRequest) => {
         try {
           set({ loading: true, error: null });
-          const response = await ProjectApiService.updateProject(id, updates);
+          await ProjectApiService.updateProject(id, updates);
 
-          // Optimistic update
-          set((state) => ({
-            projects: state.projects.map((project) =>
-              project.id === id ? { ...project, ...response.data } : project,
-            ),
-            loading: false,
-          }));
+          // Fetch lại toàn bộ projects sau khi cập nhật
+          await get().fetchProjects();
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to update project', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
@@ -110,16 +92,11 @@ export const useProjectStore = create<ProjectState>()(
           set({ loading: true, error: null });
           await ProjectApiService.deleteProject(id);
 
-          // Optimistic update
-          set((state) => ({
-            projects: state.projects.filter((project) => project.id !== id),
-            loading: false,
-          }));
+          // Fetch lại toàn bộ projects sau khi xóa
+          await get().fetchProjects();
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to delete project', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
     }),

@@ -16,7 +16,7 @@ import { breadcrumbMap } from '~utils/breadcrumb';
 
 const BreadcrumbCurrent = () => {
   const pathname = usePathname();
-  const projects = useProjectStore((state) => state.projects);
+  const projects = useProjectStore((state) => state.projects) || [];
   const t = useTranslations('Project');
 
   const pathList = [
@@ -37,7 +37,7 @@ const BreadcrumbCurrent = () => {
     if (path.startsWith('/projects/')) {
       const projectId = path.split('/').pop();
       if (projectId) {
-        const project = projects.find((p) => p.id === projectId);
+        const project = projects?.find((p) => p.id === projectId);
         if (project) {
           // Handle i18n for default projects
           if (project.name.startsWith('Project.')) {

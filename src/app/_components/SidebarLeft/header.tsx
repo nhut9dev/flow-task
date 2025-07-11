@@ -3,6 +3,7 @@
 import { ChevronsUpDown, Folder as FolderIcon, Plus } from 'lucide-react';
 import * as React from 'react';
 
+import { useInitStore } from '~hooks/useInitStore';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +35,12 @@ export default function Header({
   setSelectedFolderId: (id: string | null) => void;
 }) {
   const { isMobile } = useSidebar();
+
+  // Initialize folders
+  useInitStore({
+    fetchFolders: true,
+  });
+
   // Find the active folder or null (for all)
   const activeFolder = selectedFolderId ? folders.find((f) => f.id === selectedFolderId) : null;
 
@@ -62,7 +69,9 @@ export default function Header({
                   {activeFolder ? activeFolder.name : 'All folders'}
                 </span>
                 <span className="truncate text-xs">
-                  {activeFolder ? `Projects: ${activeFolder.projectIds.length}` : 'All projects'}
+                  {activeFolder
+                    ? `Projects: ${activeFolder.projectIds?.length || 0}`
+                    : 'All projects'}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto" />
@@ -84,7 +93,7 @@ export default function Header({
               </div>
               All folders
             </DropdownMenuItem>
-            {folders.map((folder) => (
+            {folders?.map((folder) => (
               <DropdownMenuItem
                 key={folder.id}
                 onClick={() => setSelectedFolderId(folder.id)}
@@ -98,18 +107,18 @@ export default function Header({
                   )}
                 </div>
                 {folder.name}
-                <DropdownMenuShortcut>{folder.projectIds.length}</DropdownMenuShortcut>
+                <DropdownMenuShortcut>{folder.projectIds?.length || 0}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <CreateFolderForm>
-              <DropdownMenuItem className="gap-2 p-2" onSelect={(e) => e.preventDefault()}>
-                <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-                  <Plus className="size-4" />
+            <DropdownMenuItem asChild>
+              <CreateFolderForm>
+                <div className="flex w-full items-center gap-2">
+                  <Plus className="size-3.5 shrink-0" />
+                  <span>Create Folder</span>
                 </div>
-                <div className="text-muted-foreground font-medium">Add folder</div>
-              </DropdownMenuItem>
-            </CreateFolderForm>
+              </CreateFolderForm>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

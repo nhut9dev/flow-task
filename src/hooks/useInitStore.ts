@@ -1,72 +1,60 @@
 import { useEffect } from 'react';
 
-import { PROJECT_DEFAULT_DATA } from '~constants/project';
 import { useFolderStore } from '~stores/folderStore';
 import { useProjectStore } from '~stores/projectStore';
 import { useTaskStore } from '~stores/taskStore';
 
-export const useInitProjectStore = () => {
-  const { projects, loading, error, fetchProjects, setProjects, clearError } = useProjectStore();
+interface UseInitStoreOptions {
+  fetchFolders?: boolean;
+  fetchProjects?: boolean;
+  fetchTasks?: boolean;
+  projectId?: string;
+}
+
+export function useInitStore(options: UseInitStoreOptions = {}) {
+  const { fetchFolders = false, fetchProjects = false, fetchTasks = false, projectId } = options;
+
+  const fetchFoldersAction = useFolderStore((state) => state.fetchFolders);
+  const fetchProjectsAction = useProjectStore((state) => state.fetchProjects);
+  const fetchTasksAction = useTaskStore((state) => state.fetchTasks);
+  const fetchTasksByProjectAction = useTaskStore((state) => state.fetchTasksByProject);
 
   useEffect(() => {
-    const initializeData = async () => {
+    const loadData = async () => {
       try {
-        // Try to fetch from API first
-        await fetchProjects();
+        const promises = [];
+
+        if (fetchFolders) {
+          promises.push(fetchFoldersAction());
+        }
+
+        if (fetchProjects) {
+          promises.push(fetchProjectsAction());
+        }
+
+        if (fetchTasks) {
+          if (projectId) {
+            promises.push(fetchTasksByProjectAction(projectId));
+          } else {
+            promises.push(fetchTasksAction());
+          }
+        }
+
+        await Promise.all(promises);
       } catch (error) {
-        // If API fails, fallback to default data
-        console.warn('Failed to fetch projects from API, using default data:', error);
-        setProjects(PROJECT_DEFAULT_DATA);
+        console.error('Failed to initialize store data:', error);
       }
     };
 
-    // Only initialize if we don't have projects and not currently loading
-    if (projects.length === 0 && !loading) {
-      initializeData();
-    }
-  }, [projects.length, loading, fetchProjects, setProjects]);
-
-  return { loading, error, clearError };
-};
-
-export const useInitFolderStore = () => {
-  const { folders, loading, error, fetchFolders, clearError } = useFolderStore();
-
-  useEffect(() => {
-    const initializeData = async () => {
-      try {
-        await fetchFolders();
-      } catch (error) {
-        console.warn('Failed to fetch folders from API:', error);
-        // Folders can be empty initially, so no fallback needed
-      }
-    };
-
-    if (folders.length === 0 && !loading) {
-      initializeData();
-    }
-  }, [folders.length, loading, fetchFolders]);
-
-  return { loading, error, clearError };
-};
-
-export const useInitTaskStore = () => {
-  const { tasks, loading, error, fetchTasks, clearError } = useTaskStore();
-
-  useEffect(() => {
-    const initializeData = async () => {
-      try {
-        await fetchTasks();
-      } catch (error) {
-        console.warn('Failed to fetch tasks from API:', error);
-        // Tasks can be empty initially, so no fallback needed
-      }
-    };
-
-    if (tasks.length === 0 && !loading) {
-      initializeData();
-    }
-  }, [tasks.length, loading, fetchTasks]);
-
-  return { loading, error, clearError };
-};
+    loadData();
+  }, [
+    fetchFolders,
+    fetchProjects,
+    fetchTasks,
+    projectId,
+    fetchFoldersAction,
+    fetchProjectsAction,
+    fetchTasksAction,
+    fetchTasksByProjectAction,
+  ]);
+}

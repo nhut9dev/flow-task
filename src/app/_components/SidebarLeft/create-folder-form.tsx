@@ -1,12 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
-import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
 import { SelectIcon } from '~components/SelectIcon';
+import { useToast } from '~hooks/useToast';
 import { useFolderStore } from '~stores/folderStore';
 import { Button } from '~ui/button';
 import {
@@ -30,6 +29,8 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function CreateFolderForm({ children }: { children: React.ReactNode }) {
   const createFolder = useFolderStore((state) => state.createFolder);
+  const showToast = useToast();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,17 +39,25 @@ export function CreateFolderForm({ children }: { children: React.ReactNode }) {
     },
   });
 
-  const onSubmit = (values: FormValues) => {
-    createFolder({
-      id: uuidv4(),
-      name: values.name,
-      icon: values.icon,
-      projectIds: [],
-      createdAt: dayjs().toISOString(),
-      modifiedAt: dayjs().toISOString(),
-    });
-    form.reset();
-    // Close dialog
+  const onSubmit = async (values: FormValues) => {
+    try {
+      await createFolder({
+        name: values.name,
+        icon: values.icon,
+      });
+      form.reset();
+      showToast({
+        title: 'Success',
+        description: 'Folder created successfully',
+        variant: 'success',
+      });
+    } catch (error) {
+      showToast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to create folder',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (

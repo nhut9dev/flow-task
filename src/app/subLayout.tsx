@@ -2,12 +2,12 @@
 
 import Footer from '~components/Footer';
 import Header from '~components/Header';
-import { useInitProjectStore } from '~hooks/useInitStore';
+import { useInitStore } from '~hooks/useInitStore';
 
 import AppSidebar from './_components/AppSidebar';
 
 export default function SubLayout({ children }: { children: React.ReactNode }) {
-  useInitProjectStore();
+  useInitStore();
 
   return (
     <AppSidebar>

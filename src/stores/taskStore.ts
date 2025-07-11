@@ -51,10 +51,8 @@ export const useTaskStore = create<TaskState>()(
           const response = await TaskApiService.getTasks(projectId);
           set({ tasks: response.data, loading: false });
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to fetch tasks', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
@@ -64,48 +62,43 @@ export const useTaskStore = create<TaskState>()(
           const response = await TaskApiService.getTasksByProject(projectId);
           set({ tasks: response.data, loading: false });
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to fetch project tasks', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
       createTask: async (taskData: CreateTaskRequest) => {
         try {
           set({ loading: true, error: null });
-          const response = await TaskApiService.createTask(taskData);
+          await TaskApiService.createTask(taskData);
 
-          // Optimistic update
-          set((state) => ({
-            tasks: [...state.tasks, response.data],
-            loading: false,
-          }));
+          // Fetch lại tasks sau khi tạo
+          if (taskData.projectId) {
+            await get().fetchTasksByProject(taskData.projectId);
+          } else {
+            await get().fetchTasks();
+          }
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to create task', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
       updateTask: async (id: string, updates: UpdateTaskRequest) => {
         try {
           set({ loading: true, error: null });
-          const response = await TaskApiService.updateTask(id, updates);
+          await TaskApiService.updateTask(id, updates);
 
-          // Optimistic update
-          set((state) => ({
-            tasks: state.tasks.map((task) =>
-              task.id === id ? { ...task, ...response.data } : task,
-            ),
-            loading: false,
-          }));
+          // Fetch lại tasks sau khi cập nhật
+          const currentTask = get().tasks.find((task) => task.id === id);
+          if (currentTask?.projectId) {
+            await get().fetchTasksByProject(currentTask.projectId);
+          } else {
+            await get().fetchTasks();
+          }
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to update task', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
 
@@ -114,16 +107,16 @@ export const useTaskStore = create<TaskState>()(
           set({ loading: true, error: null });
           await TaskApiService.deleteTask(id);
 
-          // Optimistic update
-          set((state) => ({
-            tasks: state.tasks.filter((task) => task.id !== id),
-            loading: false,
-          }));
+          // Fetch lại tasks sau khi xóa
+          const currentTask = get().tasks.find((task) => task.id === id);
+          if (currentTask?.projectId) {
+            await get().fetchTasksByProject(currentTask.projectId);
+          } else {
+            await get().fetchTasks();
+          }
         } catch (error) {
-          const appError =
-            error instanceof AppError ? error : new AppError('Failed to delete task', 500);
-          set({ error: appError, loading: false });
-          throw appError;
+          set({ error: error as AppError, loading: false });
+          throw error;
         }
       },
     }),

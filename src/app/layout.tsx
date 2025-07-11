@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 
 import SubLayout from '~app/subLayout';
 import { ThemeProvider } from '~components/ThemeProvider';
+import { ToastProvider } from '~components/ui/toast-provider';
 import { cn } from '~lib/utils';
 import { SidebarProvider } from '~ui/sidebar';
 
@@ -51,11 +52,13 @@ export default async function LocaleLayout({ children }: Props) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider>
-            <SidebarProvider>
-              <SubLayout>{children}</SubLayout>
-            </SidebarProvider>
-          </NextIntlClientProvider>
+          <ToastProvider>
+            <NextIntlClientProvider>
+              <SidebarProvider>
+                <SubLayout>{children}</SubLayout>
+              </SidebarProvider>
+            </NextIntlClientProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

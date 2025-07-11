@@ -4,13 +4,21 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
 import TasksList from '~components/TasksList';
+import { useInitStore } from '~hooks/useInitStore';
 import { useProjectStore } from '~stores/projectStore';
 
 export default function ProjectDetail() {
   const params = useParams();
   const projectId = params.id as string;
-  const projects = useProjectStore((state) => state.projects);
+  const projects = useProjectStore((state) => state.projects) || [];
   const t = useTranslations('Project');
+
+  // Initialize stores with API data
+  useInitStore({
+    fetchProjects: true,
+    fetchTasks: true,
+    projectId,
+  });
 
   const project = projects.find((p) => p.id === projectId);
 
@@ -47,7 +55,7 @@ export default function ProjectDetail() {
               <strong>Modified:</strong> {new Date(project.modifiedAt).toLocaleDateString()}
             </p>
             <p>
-              <strong>Tasks:</strong> {project.taskIds.length}
+              <strong>Tasks:</strong> {project.taskIds?.length || 0}
             </p>
             {project.folderId && (
               <p>

@@ -4,6 +4,7 @@ import { Folder } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
+import { useInitStore } from '~hooks/useInitStore';
 import { useProjectStore } from '~stores/projectStore';
 import Icon from '~ui/icon';
 import {
@@ -17,6 +18,11 @@ import {
 export function NavMain() {
   const projects = useProjectStore((state) => state.projects);
   const t = useTranslations('Project');
+
+  // Initialize projects
+  useInitStore({
+    fetchProjects: true,
+  });
 
   const defaultProjects = projects.filter((project) => project.disabled);
 
